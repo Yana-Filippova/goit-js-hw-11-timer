@@ -1,17 +1,16 @@
 import './styles.css';
 
-const refs = {
-  days: document.querySelector('[data-value="days"]'),
-  hours: document.querySelector('[data-value="hours"]'),
-  mins: document.querySelector('[data-value="mins"]'),
-  secs: document.querySelector('[data-value="secs"]'),
-};
-
 class CountdownTimer {
   constructor({ selector, targetDate }) {
     this.selector = selector;
     this.targetDate = targetDate;
     this.intervalId = null;
+
+    this.timerId = document.querySelector(`${this.selector}`);
+    this.days = this.timerId.querySelector('[data-value="days"]');
+    this.hours = this.timerId.querySelector('[data-value="hours"]');
+    this.mins = this.timerId.querySelector('[data-value="mins"]');
+    this.secs = this.timerId.querySelector('[data-value="secs"]');
 
     this.start();
   }
@@ -21,13 +20,13 @@ class CountdownTimer {
       const deltaTime = this.targetDate - Date.now();
       const time = this.getTimeRemaining(deltaTime);
 
-      updateClock(time);
+      this.updateClock(time);
 
       if (deltaTime <= 0) {
         clearInterval(this.intervalId);
         const time = this.getTimeRemaining(0);
 
-        updateClock(time);
+        this.updateClock(time);
       }
     }, 1000);
   }
@@ -44,17 +43,23 @@ class CountdownTimer {
   pad(value) {
     return String(value).padStart(2, '0');
   }
-}
 
-function updateClock({ days, hours, mins, secs }) {
-  refs.days.textContent = days;
-  refs.hours.textContent = hours;
-  refs.mins.textContent = mins;
-  refs.secs.textContent = secs;
+  updateClock({ days, hours, mins, secs }) {
+    this.days.textContent = days;
+    this.hours.textContent = hours;
+    this.mins.textContent = mins;
+    this.secs.textContent = secs;
+  }
 }
 
 // Плагин это класс CountdownTimer, экземпляр которого создает новый таймер с настройками.
-new CountdownTimer({
+
+const timer1 = new CountdownTimer({
   selector: '#timer-1',
-  targetDate: new Date('Jan 01, 2022'),
+  targetDate: new Date('Oct 05, 2021'),
+});
+
+const timer2 = new CountdownTimer({
+  selector: '#timer-2',
+  targetDate: new Date('Dec 31, 2021'),
 });
